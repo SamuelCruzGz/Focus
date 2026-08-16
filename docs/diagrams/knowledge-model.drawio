@@ -1,0 +1,125 @@
+<mxfile host="app.diagrams.net" modified="2026-08-16T00:00:00.000Z" agent="Claude" version="24.0.0" type="device">
+  <diagram name="AdHoc - Modelo de Conocimiento" id="adhoc-erd">
+    <mxGraphModel dx="1400" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1650" pageHeight="1275" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="project" value="&lt;b&gt;Project&lt;/b&gt;&lt;hr&gt;id (PK)&lt;br&gt;name&lt;br&gt;org_id" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=8;spacingTop=6;fontSize=11;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="40" y="40" width="160" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="person" value="&lt;b&gt;Person&lt;/b&gt;&lt;hr&gt;id (PK)&lt;br&gt;name&lt;br&gt;role&lt;br&gt;contact&lt;br&gt;org_id" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=8;spacingTop=6;fontSize=11;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="320" y="40" width="180" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="source" value="&lt;b&gt;Source&lt;/b&gt;&lt;hr&gt;id (PK)&lt;br&gt;type (git/doc/spec/snapshot/...)&lt;br&gt;url_or_path" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=8;spacingTop=6;fontSize=11;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="40" y="220" width="180" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="system" value="&lt;b&gt;System&lt;/b&gt;&lt;hr&gt;id (PK)&lt;br&gt;name&lt;br&gt;description" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=8;spacingTop=6;fontSize=11;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="320" y="220" width="160" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="feature" value="&lt;b&gt;Feature&lt;/b&gt;&lt;hr&gt;id (PK)&lt;br&gt;name" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=8;spacingTop=6;fontSize=11;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="580" y="220" width="180" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="rule" value="&lt;b&gt;Rule&lt;/b&gt;&lt;hr&gt;id (PK)&lt;br&gt;type (business/regulatory)&lt;br&gt;mutability&lt;br&gt;severity_if_violated" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=8;spacingTop=6;fontSize=11;fillColor=#fff2cc;strokeColor=#d6b656;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="860" y="220" width="200" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="changeevent" value="&lt;b&gt;ChangeEvent&lt;/b&gt;&lt;hr&gt;id (PK)&lt;br&gt;type&lt;br&gt;timestamp" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=8;spacingTop=6;fontSize=11;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="40" y="400" width="200" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="evidence" value="&lt;b&gt;Evidence&lt;/b&gt;&lt;hr&gt;id (PK)&lt;br&gt;content&lt;br&gt;extracted_at" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=8;spacingTop=6;fontSize=11;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="320" y="400" width="220" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="knowledge" value="&lt;b&gt;Knowledge&lt;/b&gt;&lt;hr&gt;id (PK)&lt;br&gt;summary&lt;br&gt;version" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=8;spacingTop=6;fontSize=11;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="320" y="580" width="220" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="document" value="&lt;b&gt;Document&lt;/b&gt;&lt;hr&gt;id (PK)&lt;br&gt;version&lt;br&gt;status (pending/reviewed/approved)" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=8;spacingTop=6;fontSize=11;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="320" y="760" width="220" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" value="N:N participates_in" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;fontSize=10;endArrow=none;startArrow=none;" edge="1" parent="1" source="person" target="project">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" value="1:N contains" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;fontSize=10;endArrow=block;startArrow=none;" edge="1" parent="1" source="project" target="feature">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" value="N:N impacted_by" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;fontSize=10;endArrow=none;startArrow=none;" edge="1" parent="1" source="feature" target="changeevent">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e5" value="N:N detected_from" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;fontSize=10;endArrow=none;startArrow=none;" edge="1" parent="1" source="changeevent" target="source">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e6" value="N:N provides" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;fontSize=10;endArrow=none;startArrow=none;" edge="1" parent="1" source="source" target="evidence">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e8" value="N:N supports" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;fontSize=10;endArrow=none;startArrow=none;" edge="1" parent="1" source="evidence" target="knowledge">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e9" value="N:N relates_to" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;fontSize=10;endArrow=none;startArrow=none;" edge="1" parent="1" source="knowledge" target="feature">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e10" value="N:N relates_to" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;fontSize=10;endArrow=none;startArrow=none;" edge="1" parent="1" source="knowledge" target="system">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e11" value="1:1 supersedes" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;fontSize=10;endArrow=block;exitX=0;exitY=0.25;exitDx=0;exitDy=0;entryX=0;entryY=0.75;entryDx=0;entryDy=0;" edge="1" parent="1" source="knowledge" target="knowledge">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="270" y="605" />
+              <mxPoint x="270" y="655" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e12" value="N:N relates_to" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;fontSize=10;endArrow=none;startArrow=none;dashed=1;strokeColor=#d6b656;" edge="1" parent="1" source="changeevent" target="rule">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e13" value="N:N applies_to" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;fontSize=10;endArrow=none;startArrow=none;dashed=1;strokeColor=#d6b656;" edge="1" parent="1" source="rule" target="feature">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e14" value="N:N applies_to" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;fontSize=10;endArrow=none;startArrow=none;dashed=1;strokeColor=#d6b656;" edge="1" parent="1" source="rule" target="system">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e15" value="N:N generated_from" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;fontSize=10;endArrow=none;startArrow=none;" edge="1" parent="1" source="document" target="knowledge">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e16" value="N:N reviewed_by" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;fontSize=10;endArrow=none;startArrow=none;exitX=0.1;exitY=1;entryX=0;entryY=0.3;" edge="1" parent="1" source="document" target="person">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e17" value="N:N approved_by" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;fontSize=10;endArrow=none;startArrow=none;exitX=0.4;exitY=1;entryX=0;entryY=0.6;" edge="1" parent="1" source="document" target="person">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e18" value="N:N documents" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;fontSize=10;endArrow=none;startArrow=none;" edge="1" parent="1" source="document" target="feature">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e19" value="N:N documents" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;fontSize=10;endArrow=none;startArrow=none;" edge="1" parent="1" source="document" target="system">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e20" value="supersedes" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;fontSize=10;endArrow=block;exitX=0;exitY=0.25;entryX=0;entryY=0.75;" edge="1" parent="1" source="document" target="document">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="270" y="785" />
+              <mxPoint x="270" y="845" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e21" value="N:N impacts" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;fontSize=10;endArrow=none;startArrow=none;" edge="1" parent="1" source="changeevent" target="system">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e22" value="N:N performed (provisional)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;fontSize=10;endArrow=none;startArrow=none;" edge="1" parent="1" source="person" target="changeevent">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="legend1" value="Conceptual model v0.1 | Azul: context | Verde: sources/system | Naranja: events/evidence | Morado: Knowledge core | Rojo: Document | Amarillo: Rule / governance context" style="text;html=1;align=left;verticalAlign=middle;fontSize=10;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="40" y="920" width="1020" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="e23" value="N:N relates_to" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;fontSize=10;endArrow=none;startArrow=none;" edge="1" parent="1" source="feature" target="system">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="note1" value="CONCEPTUAL MODEL v0.1&lt;br&gt;&lt;br&gt;These cardinalities describe the domain model, not the physical database schema. N:N relationships may require junction tables during implementation." style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=8;spacingTop=6;fontSize=10;fillColor=#f5f5f5;strokeColor=#999999;" vertex="1" parent="1">
+          <mxGeometry x="40" y="930" width="520" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="note2" value="CORE PRINCIPLE&lt;br&gt;&lt;br&gt;Source → Evidence → Knowledge → Document&lt;br&gt;Knowledge is the central model that consolidates supported, validated understanding. Evidence does not connect directly to Rule/Feature/System." style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=8;spacingTop=6;fontSize=10;fillColor=#f5f5f5;strokeColor=#999999;" vertex="1" parent="1">
+          <mxGeometry x="600" y="930" width="520" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="note3" value="VERSIONING&lt;br&gt;&lt;br&gt;Knowledge and Document versions are preserved. supersedes expresses evolution; retention/archiving/storage policy is outside v0.1." style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=8;spacingTop=6;fontSize=10;fillColor=#f5f5f5;strokeColor=#999999;" vertex="1" parent="1">
+          <mxGeometry x="1160" y="930" width="430" height="90" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
