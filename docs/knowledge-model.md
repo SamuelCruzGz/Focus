@@ -2,42 +2,30 @@
 
 ## Status
 
-**Version:** 0.1\
-**Status:** Conceptual model\
+**Version:** 0.1
+**Status:** Conceptual model
 **Scope:** Initial Focus product
 
-This document defines the initial conceptual knowledge model for Focus.
-It describes the entities, their purpose, relationships, and the
-principles that guide the model.
+This document defines the conceptual knowledge model for Focus. It describes the domain entities, their purpose, relationships, and the principles that guide the model.
 
-This is a conceptual model, not yet a physical database schema.
-Implementation details such as foreign keys, junction tables, indexes,
-storage engines, and exact constraints will be defined during the
-logical and physical data-modeling stages.
+This is not a physical database schema. Implementation details such as identifiers, foreign keys, junction tables, indexes, storage engines, and exact constraints will be decided during logical and physical data modeling.
 
-------------------------------------------------------------------------
+---
 
 ## Core Principle
 
-Focus combines automated documentation with a persistent knowledge model
-that continuously builds and organizes knowledge about a software system
-from reliable sources and validated human context.
+Focus builds a persistent, traceable understanding of a software system from sources, source-level events, evidence, facts, validation, and human context.
 
-The Knowledge Model is the central layer of the product.
-
-Sources provide information. Evidence represents concrete information
-obtained from those sources. Knowledge consolidates and relates
-validated information. Documents are generated from the resulting
-knowledge.
+Sources provide information. A **Commit** is a source-level event, especially a Git commit. A **ChangeEvent** is a change identified by Focus and can be derived from one or more source events. **Evidence** is concrete information obtained from sources. **Facts** are concrete assertions derived from evidence. **Knowledge** is accepted and consolidated understanding; a Fact does not become Knowledge automatically.
 
 The conceptual flow is:
 
-**Source → Evidence → Knowledge → Document**
+**Source → Commit → ChangeEvent**
+**Source → Evidence → Fact → Knowledge → Document**
 
-Knowledge acts as the central model through which information is
-contextualized and consumed by future capabilities.
+Evidence can originate independently from a ChangeEvent. The two paths can therefore meet through shared evidence and facts, but neither requires the other.
 
-------------------------------------------------------------------------
+---
 
 # Entities
 
@@ -45,55 +33,38 @@ contextualized and consumed by future capabilities.
 
 ### Purpose
 
-Represents a person involved in the activities, validation, or context
-of a software project.
-
-### Relevant information
-
-A Person may contain information such as:
-
--   Identity
--   Contact information
--   Organizational role
-
-The organizational role can be used to infer responsibilities according
-to the organization's configured policies.
+Represents a person involved in project activity, review, validation, approval, or human context.
 
 ### Relationships
 
--   A Person can participate in multiple Projects.
--   A Person can participate in multiple ChangeEvents.
--   A Person can review multiple Documents.
--   A Person can approve multiple Documents.
+- A Person can participate in multiple Projects.
+- A Person can be associated with multiple Commits and ChangeEvents.
+- A Person can provide or validate human context represented as Evidence and Facts.
+- A Person can review multiple Facts and Documents.
+- A Person can approve multiple Documents.
 
 ### Important principle
 
-Approval authority should not be hard-coded into the Person entity. It
-should be determined from the person's role and the organization's
-configured validation policies.
+Approval and validation authority are determined by organizational role and configured policies, not hard-coded into Person.
 
-------------------------------------------------------------------------
+---
 
 ## Project
 
 ### Purpose
 
-Represents a project worked on by the organization.
-
-A Project provides context for a set of related Features and the people
-participating in the project.
+Represents a project worked on by the organization. It provides context for related Features and participating Persons.
 
 ### Relationships
 
--   A Project can have multiple Persons.
--   A Project contains multiple Features.
+- A Project can have multiple Persons.
+- A Project contains multiple Features.
 
 ### Important principle
 
-A Project does not directly own a System or Rule in the initial model
-when those relationships can be derived through Features.
+A Project does not directly own a System or Rule in the initial model when those relationships can be derived through Features.
 
-------------------------------------------------------------------------
+---
 
 ## Feature
 
@@ -101,70 +72,13 @@ when those relationships can be derived through Features.
 
 Represents a functionality or capability associated with a Project.
 
-A Feature can represent a small or large change in the functionality of
-a Project.
-
 ### Relationships
 
--   A Feature belongs to one Project.
--   A Feature can be affected by multiple ChangeEvents.
--   A Feature can relate to multiple Systems.
--   A Feature can be associated with multiple Knowledge units.
--   A Feature can have multiple Rules applied to it.
--   A Feature can appear in multiple Documents.
+- A Feature belongs to one Project.
+- A Feature can be affected by multiple ChangeEvents.
+- A Feature can relate to multiple Systems, Knowledge units, Rules, and Documents.
 
-------------------------------------------------------------------------
-
-## ChangeEvent
-
-### Purpose
-
-Represents an event in which a change occurs or is detected in the
-software system.
-
-Examples may include:
-
--   Code changes
--   Releases
--   Deployments
--   Snapshots
--   Other relevant system changes
-
-### Relationships
-
--   A ChangeEvent can affect multiple Features.
--   A ChangeEvent can impact multiple Systems.
--   A ChangeEvent can be detected from multiple Sources.
--   A ChangeEvent can relate to multiple Rules.
--   A ChangeEvent can involve multiple Persons.
-
-### Important principle
-
-A ChangeEvent represents what happened. It should not automatically
-imply why it happened, whether it is correct, or whether it violates a
-Rule.
-
-------------------------------------------------------------------------
-
-## System
-
-### Purpose
-
-Represents a software system or broader technical system involved in the
-organization's activities.
-
-A System can exist independently of a Project and can be involved in
-multiple Projects through their Features.
-
-### Relationships
-
--   A System can be related to multiple Features.
--   A System can be related to multiple Knowledge units.
--   A System can have multiple Rules applied to it.
--   A System can be impacted by multiple ChangeEvents.
--   A System can be described by multiple Documents.
-
-------------------------------------------------------------------------
+---
 
 ## Source
 
@@ -172,378 +86,297 @@ multiple Projects through their Features.
 
 Represents a source from which Focus obtains information.
 
-Examples include:
-
--   Git repositories
--   Production environments
--   Documentation repositories
--   Snapshots
--   External systems
--   Other trusted information sources
+Examples include Git repositories, production environments, documentation repositories, snapshots, external systems, and other trusted information sources.
 
 ### Relationships
 
--   A Source can provide multiple Evidence items.
--   A Source can be associated with multiple ChangeEvents as the source
-    from which those events were detected.
+- A Source can contain or provide multiple Commits.
+- A Source can provide multiple Evidence items.
 
 ### Important principle
 
-A Source is not automatically equivalent to Knowledge. It provides
-information that must be represented as Evidence and incorporated into
-the Knowledge Model.
+A Source is not Knowledge. It provides information that must be represented as Evidence and assessed through Facts and validation.
 
-------------------------------------------------------------------------
+---
+
+## Commit
+
+### Purpose
+
+Represents a source-level event, especially a Git commit. It records what was committed at the source level; it is not the same thing as the change Focus identifies from that source information.
+
+### Relationships
+
+- A Commit originates from one Source; a Source can contain multiple Commits.
+- A Commit can be associated with multiple Persons, such as authors or committers.
+- A Commit can contribute to one or more ChangeEvents.
+
+### Important principle
+
+A Commit is an immutable historical source event. New commits do not overwrite earlier commits or the historical information derived from them.
+
+---
+
+## ChangeEvent
+
+### Purpose
+
+Represents a change identified by Focus. A ChangeEvent may be derived from one or more source events, including Commits.
+
+Examples include an identified functional change, release, deployment, snapshot difference, or other relevant system change.
+
+### Relationships
+
+- A ChangeEvent can be derived from multiple Commits, and a Commit can contribute to multiple ChangeEvents.
+- A ChangeEvent can affect multiple Features and impact multiple Systems.
+- A ChangeEvent can relate to multiple Rules and involve multiple Persons.
+- A ChangeEvent can be associated with Evidence, but Evidence does not require a ChangeEvent.
+
+### Important principle
+
+A ChangeEvent represents what Focus identified as a change. It does not itself determine why it happened, whether it is correct, whether it violates a Rule, or whether a resulting Fact is true.
+
+---
 
 ## Evidence
 
 ### Purpose
 
-Represents a concrete piece of information obtained from one or more
-Sources.
+Represents concrete information obtained from one or more Sources.
 
-Evidence is the factual material from which Knowledge can be constructed
-or supported.
+Evidence may originate from a Commit or ChangeEvent, but it is not required to do so. For example, Evidence can be obtained independently from a CRM, production system, documentation, snapshot, or validated human context.
 
 ### Relationships
 
--   A Source can provide multiple Evidence items.
--   An Evidence item can be supported by multiple Sources.
--   An Evidence item can support multiple Knowledge units.
+- A Source can provide multiple Evidence items, and an Evidence item can be supported by multiple Sources.
+- Evidence can be associated with a ChangeEvent when relevant.
+- An Evidence item can support multiple Facts.
+- Evidence remains traceable from the Facts and Knowledge it supports.
 
 ### Important principle
 
-Evidence should not be forced to originate from a ChangeEvent. Evidence
-can exist independently, for example when information comes from a CRM,
-production system, documentation, or validated human context.
+Evidence is concrete source material, not an accepted assertion or Knowledge by itself.
 
-------------------------------------------------------------------------
+---
+
+## Fact
+
+### Purpose
+
+Represents a concrete assertion derived from one or more Evidence items.
+
+### Classification
+
+Every Fact has one of these classifications:
+
+- `OBSERVED` — directly observed from source-derived evidence.
+- `HUMAN_CONTEXT` — context supplied by a person.
+- `INFERRED` — assertion inferred from available evidence.
+
+### Lifecycle state
+
+Every Fact has one of these lifecycle states:
+
+- `NOT_CHECKED`
+- `IN_REVIEW`
+- `CHECKED`
+- `REJECTED`
+- `SUPERSEDED`
+
+### Relationships
+
+- A Fact is derived from one or more Evidence items; Evidence can support multiple Facts.
+- A Fact can support one or more Knowledge units only when accepted or consolidated through the applicable review and validation process.
+- A Fact can participate in multiple Discrepancies.
+- A Fact can be reviewed or validated by Persons.
+- A newer Fact can supersede a previous Fact without overwriting it.
+
+### Important principles
+
+A Fact does not automatically become Knowledge. `CHECKED` means its review or validation state has been recorded; acceptance into Knowledge remains a separate consolidation decision.
+
+Human-context Facts require validation before they can support trusted Knowledge. Rejected Facts remain historically traceable with their `REJECTED` state; they are not physically deleted.
+
+---
 
 ## Knowledge
 
 ### Purpose
 
-Represents a unit of knowledge about the software system, its
-functionality, rules, context, or behavior.
-
-Knowledge is the central component of the Focus Knowledge Model.
+Represents accepted and consolidated knowledge about the software system, functionality, rules, context, or behavior.
 
 ### Relationships
 
--   A Knowledge unit can be supported by multiple Evidence items.
--   A Knowledge unit can relate to multiple Features.
--   A Knowledge unit can relate to multiple Systems.
--   A Knowledge unit can relate to multiple Rules.
--   Knowledge can evolve through versions that supersede previous
-    versions.
--   Knowledge can be used to generate multiple Documents.
+- Knowledge can be supported by multiple Facts and the Evidence underlying them.
+- Knowledge can relate to multiple Features, Systems, and Rules.
+- Knowledge can evolve through versions that supersede previous versions.
+- Knowledge can be used to generate multiple Documents.
 
-### Important principle
+### Important principles
 
-Knowledge should remain traceable to its supporting Evidence.
+Knowledge is not a synonym for Evidence or Fact. It represents accepted/consolidated understanding and must remain traceable to its supporting Facts and Evidence.
 
-Focus should avoid presenting unsupported inference as fact. Where
-evidence is insufficient, the model should preserve that uncertainty
-rather than inventing context.
+When new commits or other information change the system, new Facts and/or Knowledge versions are created as needed. Historical information is not overwritten or destroyed.
 
-### Versioning
+---
 
-Knowledge is intended to preserve historical versions.
-
-When new validated information changes an existing unit of knowledge, a
-new version can supersede the previous version rather than overwriting
-or destroying historical information.
-
-Historical versions are important because Focus should eventually be
-able to represent how the system was understood at a specific point in
-time.
-
-Retention, archival, export, and automatic deletion policies are outside
-the scope of v0.1.
-
-------------------------------------------------------------------------
-
-## Document
+## Evaluator
 
 ### Purpose
 
-Represents the documentation generated by Focus from the Knowledge
-Model.
-
-Documents are a user-facing product output and must be understandable,
-traceable, and suitable for human validation.
+Represents a capability that evaluates Evidence and Facts for inconsistencies, insufficient evidence, and potential discrepancies.
 
 ### Relationships
 
--   A Document can be generated from multiple Knowledge units.
--   A Document can document multiple Features.
--   A Document can describe multiple Systems.
--   A Document can be reviewed by multiple Persons.
--   A Document can be approved by multiple Persons.
--   A Document can supersede a previous Document version.
+- An Evaluator can assess multiple Evidence items and Facts.
+- An Evaluator can identify or report multiple Discrepancies.
 
 ### Important principle
 
-Documents are representations of the Knowledge Model. They are not the
-Knowledge Model itself.
+An Evaluator does not determine truth and does not directly create, modify, accept, reject, or otherwise change Knowledge. Validation and review decisions remain explicit and traceable through Fact lifecycle state and human review.
 
-A Document should preserve traceability to the Knowledge from which it
-was generated.
+---
 
-### Versioning
+## Discrepancy
 
-Documents are versioned.
+### Purpose
 
-A new document version should not automatically destroy the previous
-version. Historical documentation can be relevant for understanding how
-a Project or System changed over time.
+Represents a conflict or potential conflict involving one or more Facts.
 
-------------------------------------------------------------------------
+### Relationships
+
+- A Discrepancy involves one or more Facts; a Fact can participate in multiple Discrepancies.
+- A Discrepancy can be detected or reported by an Evaluator.
+
+### Important principle
+
+There is no separate Resolution entity in v0.1. A discrepancy is addressed through explicit validation/review decisions and the affected Facts' lifecycle state, while preserving the historical record.
+
+---
+
+## System
+
+### Purpose
+
+Represents a software system or broader technical system involved in the organization's activities.
+
+### Relationships
+
+- A System can relate to multiple Features, Knowledge units, Rules, ChangeEvents, and Documents.
+
+---
 
 ## Rule
 
 ### Purpose
 
-Represents a business rule, regulation, policy, or other rule that
-applies to the software system or its Features.
-
-The initial model uses a type or classification to distinguish different
-kinds of rules.
-
-Examples include:
-
--   Business Rule
--   Regulation
--   Internal Policy
+Represents a business rule, regulation, policy, or other rule that applies to the software system or its Features.
 
 ### Relationships
 
--   A Rule can apply to multiple Features.
--   A Rule can apply to multiple Systems.
--   A Rule can relate to multiple ChangeEvents.
--   A Rule can relate to multiple Knowledge units.
+- A Rule can apply to multiple Features and Systems.
+- A Rule can relate to multiple ChangeEvents and Knowledge units.
 
 ### Important principle
 
-A ChangeEvent being related to a Rule does not automatically mean that
-the ChangeEvent violates the Rule.
+A ChangeEvent related to a Rule does not automatically violate that Rule. Violation, risk, and compliance analysis are future analytical capabilities.
 
-Violation, risk, or compliance analysis belongs to a future analytical
-capability.
+---
 
-------------------------------------------------------------------------
+## Document
+
+### Purpose
+
+Represents documentation generated by Focus from the Knowledge Model.
+
+### Relationships
+
+- A Document can be generated from multiple Knowledge units.
+- A Document can document multiple Features and Systems.
+- A Document can be reviewed and approved by multiple Persons.
+- A Document can supersede a previous Document version.
+
+### Important principle
+
+Documents are representations of Knowledge, not Knowledge itself. They preserve traceability to the Knowledge from which they were generated.
+
+---
 
 # Relationship Summary
 
-  ------------------------------------------------------------------------
-  Relationship                           Cardinality Meaning
-  --------------------- ---------------------------- ---------------------
-  Person ↔ Project                               N:N People can
-                                                     participate in
-                                                     multiple projects and
-                                                     projects can have
-                                                     multiple people.
+| Relationship | Cardinality | Meaning |
+| --- | --- | --- |
+| Person ↔ Project | N:N | People can participate in multiple projects. |
+| Project → Feature | 1:N | A project contains features; a feature belongs to one project. |
+| Source → Commit | 1:N | A source contains source-level commits. |
+| Person ↔ Commit | N:N | People can be associated with commits. |
+| Commit ↔ ChangeEvent | N:N | A ChangeEvent can be derived from multiple commits; a commit can contribute to multiple identified changes. |
+| Feature ↔ ChangeEvent | N:N | A feature can be affected by many changes. |
+| Feature ↔ System | N:N | A feature can relate to multiple systems. |
+| ChangeEvent ↔ System | N:N | A change can impact multiple systems. |
+| ChangeEvent ↔ Rule | N:N | A change can relate to multiple rules. |
+| Person ↔ ChangeEvent | N:N | A person can be involved in multiple identified changes. |
+| Rule ↔ Feature / System | N:N | A rule can apply to multiple features and systems. |
+| Source ↔ Evidence | N:N | Evidence can have one or more supporting sources. |
+| ChangeEvent ↔ Evidence | N:N, optional | Evidence can be associated with a ChangeEvent, but does not require one. |
+| Evidence ↔ Fact | N:N | Facts are derived from one or more evidence items. |
+| Person ↔ Fact | N:N | People can review or validate Facts. |
+| Fact ↔ Knowledge | N:N | Accepted/consolidated Facts can support Knowledge; no automatic promotion occurs. |
+| Evidence ↔ Knowledge | N:N | Knowledge preserves traceability to its supporting evidence. |
+| Fact → Fact | Versioned | A newer Fact can supersede, without overwriting, an earlier Fact. |
+| Fact ↔ Discrepancy | N:N | A discrepancy involves one or more Facts. |
+| Evaluator ↔ Evidence / Fact | N:N | An evaluator assesses evidence and facts for insufficiency or inconsistency. |
+| Evaluator ↔ Discrepancy | N:N | An evaluator can identify or report discrepancies. |
+| Knowledge ↔ Feature / System / Rule | N:N | Knowledge is contextualized through these domain concepts. |
+| Knowledge → Knowledge | Versioned | A newer Knowledge version can supersede an older one. |
+| Document ↔ Knowledge | N:N | A document can be generated from multiple Knowledge units. |
+| Document ↔ Feature / System | N:N | A document can cover multiple features and systems. |
+| Person ↔ Document | N:N | People can review or approve documents. |
+| Document → Document | Versioned | A newer document version can supersede an older one. |
 
-  Project → Feature                              1:N A project contains
-                                                     multiple features; a
-                                                     feature belongs to
-                                                     one project.
-
-  Feature ↔ ChangeEvent                          N:N A feature can be
-                                                     affected by many
-                                                     changes and a change
-                                                     can affect many
-                                                     features.
-
-  ChangeEvent ↔ Source                           N:N A change can be
-                                                     detected from
-                                                     multiple sources and
-                                                     a source can detect
-                                                     many changes.
-
-  Source ↔ Evidence                              N:N A source can provide
-                                                     many evidence items
-                                                     and an evidence item
-                                                     can have multiple
-                                                     supporting sources.
-
-  Evidence ↔ Knowledge                           N:N Knowledge can require
-                                                     multiple evidence
-                                                     items and evidence
-                                                     can support multiple
-                                                     knowledge units.
-
-  Knowledge ↔ Feature                            N:N Knowledge can relate
-                                                     to multiple features
-                                                     and a feature can
-                                                     have multiple
-                                                     knowledge units.
-
-  Knowledge ↔ System                             N:N Knowledge can relate
-                                                     to multiple systems
-                                                     and a system can have
-                                                     multiple knowledge
-                                                     units.
-
-  Knowledge → Knowledge                    Versioned A newer knowledge
-                                                     version can supersede
-                                                     an older version.
-
-  ChangeEvent ↔ Rule                             N:N A change can relate
-                                                     to multiple rules and
-                                                     a rule can relate to
-                                                     multiple changes.
-
-  Rule ↔ Feature                                 N:N A rule can apply to
-                                                     multiple features and
-                                                     a feature can have
-                                                     multiple applicable
-                                                     rules.
-
-  Rule ↔ System                                  N:N A rule can apply to
-                                                     multiple systems and
-                                                     a system can have
-                                                     multiple applicable
-                                                     rules.
-
-  Document ↔ Knowledge                           N:N A document can be
-                                                     generated from
-                                                     multiple knowledge
-                                                     units and knowledge
-                                                     can feed multiple
-                                                     documents.
-
-  Person ↔ Document                              N:N People can review
-  (review)                                           multiple documents
-                                                     and documents can be
-                                                     reviewed by multiple
-                                                     people.
-
-  Person ↔ Document                              N:N People can approve
-  (approval)                                         multiple documents
-                                                     and documents can
-                                                     have multiple
-                                                     approvers.
-
-  Document ↔ Feature                             N:N A document can cover
-                                                     multiple features and
-                                                     a feature can appear
-                                                     in multiple
-                                                     documents.
-
-  Document ↔ System                              N:N A document can
-                                                     describe multiple
-                                                     systems and a system
-                                                     can have multiple
-                                                     documents.
-
-  Document → Document                      Versioned A newer document
-                                                     version can supersede
-                                                     an older version.
-
-  ChangeEvent ↔ System                           N:N A change can impact
-                                                     multiple systems and
-                                                     a system can receive
-                                                     multiple changes.
-
-  Person ↔ ChangeEvent                           N:N A person can
-                                                     participate in
-                                                     multiple events and
-                                                     an event can involve
-                                                     multiple people.
-  ------------------------------------------------------------------------
-
-------------------------------------------------------------------------
+---
 
 # Deliberately Excluded Relationships
 
-The following direct relationships are not part of the initial
-conceptual model because they would introduce redundancy or bypass the
-Knowledge Model:
+The following direct relationships remain outside the initial conceptual model because they would introduce redundancy or bypass the Knowledge Model:
 
--   Source → Project
--   Project → System
--   Project → Rule
--   Evidence → Feature
--   Evidence → System
--   Evidence → Rule
+- Source → Project
+- Project → System
+- Project → Rule
+- Evidence → Feature
+- Evidence → System
+- Evidence → Rule
 
-For example:
+For example, `Evidence → Fact → Knowledge → Feature / System / Rule` keeps accepted Knowledge as the contextual layer. Evidence can still be independently associated with a ChangeEvent when that association is useful and traceable.
 
-**Rule → Feature → Project**
+No separate **Resolution** entity is introduced. Review and validation decisions, Fact lifecycle state, and historical traceability model how a discrepancy is addressed.
 
-already provides the project context of a rule applied to a feature.
-
-Likewise:
-
-**Evidence → Knowledge → Feature / System / Rule**
-
-keeps Knowledge as the central layer for contextualizing evidence.
-
-------------------------------------------------------------------------
+---
 
 # Model Principles
 
-## 1. Evidence before inference
+1. **Evidence before inference.** Focus prefers assertions supported by reliable evidence over unsupported inference.
+2. **Commit and ChangeEvent are distinct.** A Commit is a source-level event; a ChangeEvent is the change Focus identifies from one or more source events.
+3. **Facts are explicit and classified.** Every Fact records its classification and lifecycle state.
+4. **Facts are not automatically Knowledge.** Knowledge requires explicit acceptance/consolidation and remains traceable to Facts and Evidence.
+5. **Human context requires validation.** Human-context Facts cannot support trusted Knowledge until validated.
+6. **Evaluators assist, not decide truth.** Evaluators detect insufficient evidence, inconsistencies, and potential discrepancies; they do not directly modify Knowledge.
+7. **Historical information is preserved.** Rejected and superseded Facts, earlier Commits, Knowledge versions, and Document versions remain traceable rather than overwritten or deleted.
+8. **Avoid redundant relationships.** Store a direct relationship only when it carries information that cannot be reliably derived through existing relationships.
+9. **Conceptual model first.** Database-specific implementation decisions are deliberately deferred.
 
-Focus should prefer information supported by reliable sources over
-unsupported inference.
-
-## 2. Knowledge is traceable
-
-Knowledge should preserve the Evidence that supports it.
-
-## 3. Human context requires validation
-
-Human-provided context can enrich the Knowledge Model, but it should not
-automatically become trusted knowledge without the appropriate
-validation.
-
-## 4. Historical knowledge is preserved
-
-Updating Knowledge or Documents should not require destroying their
-previous versions.
-
-## 5. Avoid redundant relationships
-
-A relationship should only be stored directly when it provides
-information that cannot be reliably derived through existing
-relationships.
-
-## 6. Conceptual model first
-
-The current model describes the domain. Database-specific implementation
-decisions will be made separately.
-
-## 7. The model can evolve
-
-The v0.1 model is a working hypothesis. Real implementation scenarios
-may reveal missing relationships, incorrect cardinalities, or entities
-that should be decomposed or merged. Such changes should be documented
-and versioned rather than silently introduced.
-
-------------------------------------------------------------------------
+---
 
 # Scope of v0.1
 
 This model supports the initial Focus product flow:
 
-**Source → ChangeEvent → Evidence → Knowledge → Document → Human Review
-/ Approval**
+**Source → Commit → ChangeEvent (when identified)**
 
-The broader Knowledge Model is intentionally designed to support future
-capabilities without requiring them to be implemented in v0.1.
+**Source → Evidence → Fact → review and validation → Knowledge → Document**
 
-Potential future capabilities include:
+A ChangeEvent can be associated with Evidence when relevant, but the Evidence path remains independent.
 
--   Knowledge interaction / chat
--   System diagrams
--   Risk analysis
--   Security analysis
--   Employee onboarding and terminology assistance
--   Historical system exploration
--   Advanced retention and archival
--   Additional source integrations
+The model deliberately does not define a physical PostgreSQL schema, automatic truth determination, automatic Fact-to-Knowledge promotion, a separate Resolution entity, detailed evaluator implementation, retention policy, or deletion behavior beyond the requirement to preserve historical traceability.
 
-These capabilities are not part of the initial implementation unless
-explicitly added to the product scope.
+Potential future capabilities include knowledge interaction/chat, system diagrams, risk analysis, security analysis, onboarding assistance, historical system exploration, advanced retention and archival, and additional source integrations.
