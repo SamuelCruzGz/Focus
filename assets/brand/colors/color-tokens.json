@@ -1,0 +1,17 @@
+{
+  "color": {
+    "acervo": {
+      "background": {
+        "primary": "#1A1818"
+      },
+      "family": {
+        "blue": "#1F375B",
+        "green": "#A5D47C"
+      }
+    },
+    "acervoDoc": {
+      "documentFolder": "#D8C4A0",
+      "highlight": "#F5EF42"
+    }
+  }
+}
